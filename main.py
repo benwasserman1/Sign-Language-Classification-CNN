@@ -9,7 +9,7 @@ Created on Mon Jan 21 22:14:13 2019
 import matplotlib.pyplot as plt
 import numpy as np
 from keras.models import Sequential
-from keras.layers import Dense, Conv2D, Flatten, MaxPooling2D, Dropout
+from keras.layers import Dense, Conv2D, Flatten, MaxPooling2D, Dropout, BatchNormalization
 from sklearn.model_selection import train_test_split
 from keras.preprocessing.image import ImageDataGenerator
 
@@ -18,7 +18,8 @@ datagen = ImageDataGenerator(
     rotation_range=16,
     width_shift_range=0.08,
     height_shift_range=0.08,
-    zoom_range=.08)
+    zoom_range=.08,
+    shear_range = .08)
 
 
 # EDA: show the first image, show the shape, split into training and test, 
@@ -27,7 +28,6 @@ datagen = ImageDataGenerator(
 x = np.load("Sign-language-digits-dataset 2/X.npy")
 y = np.load("Sign-language-digits-dataset 2/Y.npy")
 
-# vgg16
 
 # plot the first image in the dataset
 plt.imshow(x[0], cmap = "gray")
@@ -62,16 +62,17 @@ model.add(Conv2D(64, kernel_size=4, activation='relu'))
 model.add(MaxPooling2D(pool_size=4))
 
 model.add(Dropout(0.3))
+model.add(Flatten())
 
 model.add(Dense(units = 256, activation = 'relu'))
-model.add(Flatten())
+model.add(BatchNormalization())
 model.add(Dense(10, activation='softmax'))
 
 #compile model using accuracy to measure model performance
 model.compile(optimizer="adam", loss='categorical_crossentropy', metrics=['accuracy'])
 
 #train the model
-model.fit(x_train, y_train, validation_data=(x_test, y_test), epochs=10)
+model.fit(x_train, y_train, validation_data=(x_test, y_test), epochs=8)
 
 model.fit_generator(datagen.flow(x_train, y_train, batch_size=32),
                     steps_per_epoch=64, epochs=8)

@@ -58,8 +58,6 @@ model = Sequential()
 model.add(Conv2D(64, kernel_size=4, activation='relu', input_shape=(64,64, 1)))
 model.add(Conv2D(64, kernel_size=4, activation='relu'))
 model.add(MaxPooling2D(pool_size=4))
-model.add(Conv2D(64, kernel_size=4, activation='relu'))
-model.add(Conv2D(64, kernel_size=4, activation='relu'))
 
 # dropout to help with overiftting
 model.add(Dropout(0.35))
